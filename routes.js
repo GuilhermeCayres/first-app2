@@ -103,23 +103,44 @@ router.get('/cadastro/list',(req,res)=>{
 });
 
 router.post('/cadastro/add',(req,res)=>{
-    let user={name:"",email:"",address:"",heigth:"",age:"",vote:""};
+    let user = {
+        name: "",
+        email: "",
+        address:"",
+        heigth:"",
+        age:"",
+        vote:""
+    }
 
     user.name = req.body._name;
     user.email = req.body._email;
     user.address = req.body._address;
-    user.heigth = req.body._heigth;
+    user.height = req.body._heigth;
     user.age = req.body._age;
-    user.vote = req.body._vote;
+
+    console.table(user)
+
+    if(!(user.name == "")&& !(user.email == "")&& !(user.addres == "") && !(user.heigth == "") && !(user.age == "")) {
+        if (user.age >= 18) {
+            user.vote = true;
+        }else{
+            user.vote = false;
+        }
+    
 
     users.push(user);
-    console.log("Usuário cadastrado: ",user);
-    console.log("Lista dos usuários: ",users); //nao use esta linha se tiver muitos elementos em users pois causara lentidao no servidor
-    res.sendStatus(200);
-    res.status(200).json({
-        status:'sucess',
-        data: `Usuário ${user} foi adiocionado com sucesso!`
+    console.log("Usuário cadastrado: ");
+    console.table(user);
+    res.render('pages/cadastro', {
+        users: users
     });
+} else {
+    return res.status(400).json({
+        status: 'error',
+        error: 'Criação de usuário invalido'
+    })
+}
+ 
 
 });
 
